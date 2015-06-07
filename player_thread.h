@@ -6,8 +6,7 @@
 #include <QDebug>
 #include "chess.h"
 
-class PlayerThread : public QThread
-{
+class PlayerThread : public QThread {
     Q_OBJECT
 public:
     static qint32 numberConnections;
@@ -31,5 +30,5 @@ private:
     colors player;
 };
 
-#endif // MYTHREAD_H
+#endif // PLAYER_THREAD_H
 

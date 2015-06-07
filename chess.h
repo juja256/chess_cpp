@@ -37,7 +37,7 @@ class chess {
 
 public:
 	chess(stringstream& os);
-	int start();
+    void start();
 	int move(string, colors);
 	void render();
 };

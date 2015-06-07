@@ -1,2 +1,5 @@
-Simply realisation of text-based chess in C++
+Multiplayer chess based on client-server model using Qt network tools. All calculations leading on server. <br>
+For make project simply:<br>
+<i>qmake && make</i><br>
+Usage: <i>./chess_server port</i>
 

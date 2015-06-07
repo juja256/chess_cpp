@@ -1,12 +1,13 @@
 #include <QCoreApplication>
 #include "chess_server.h"
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     QCoreApplication a(argc, argv);
-    // Make a server and starts it
     ChessServer server;
-    server.startServer();
-
+    if (argc != 2) {
+        qDebug() << "Specify port!";
+        return -1;
+    }
+    server.startServer(atoi(argv[1]));
     return a.exec();
 }

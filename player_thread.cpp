@@ -16,30 +16,23 @@ PlayerThread::PlayerThread(qintptr ID, QObject *parent) :
 
 void PlayerThread::run() {
     qDebug() << "Thread started";
-
     socket = new QTcpSocket();
-
     if(!socket->setSocketDescriptor(this->socketDescriptor)) {
-        // something's wrong, we just emit a signal
         emit error(socket->error());
         return;
     }
 
-    // connect socket and signal
-    // note - Qt::DirectConnection is used because it's multithreaded
-    //        This makes the slot to be invoked immediately, when the signal is emitted.
-
     connect(socket, SIGNAL(readyRead()), this, SLOT(readyRead()), Qt::DirectConnection);
     connect(socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
-
-    if (PlayerThread::numberConnections >=2) {
+    PlayerThread::numberConnections++;
+    if (PlayerThread::numberConnections >2) {
         QByteArray err = "Sorry. Game has already started.";
         socket->write(err);
         socket->flush();
         socket->abort();
     }
     qDebug() << socketDescriptor << "Client connected";
-    PlayerThread::numberConnections++;
+
     this->chessBoard->start();
     os << "Your figures are " << ((player == black) ? "blue" : "purple") <<"\n";
     socket->write(os.str().c_str(), os.str().length());
@@ -64,6 +57,7 @@ void PlayerThread::readyRead() {
 void PlayerThread::disconnected() {
     qDebug() << socketDescriptor << "Disconnected";
     socket->deleteLater();
+    PlayerThread::numberConnections--;
     exit(0);
 }
 

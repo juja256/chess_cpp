@@ -33,6 +33,7 @@ string chess::field::figure::name(){
 			return bw+" king";
 			break;
 	}
+    return "default";
 }
 
 chess::field::field(stringstream& os_): turn(white), os(os_) {
@@ -187,7 +188,7 @@ void chess::render() {
 	f->render();
 }
 
-int chess::start() {
+void chess::start() {
 	os<<"Hello! \nChess The game. \nPurple turns firstly. \nMove example: a1 a3\n";
 	f->render();
 }
