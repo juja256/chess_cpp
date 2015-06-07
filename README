@@ -1,5 +1,5 @@
-Multiplayer chess based on client-server model using Qt network tools. All calculations leading on server. <br>
-For make project simply:<br>
-<i>qmake && make</i><br>
-Usage: <i>./chess_server port</i>
+Multiplayer chess based on client-server model using Qt network tools. All calculations leading on server.
+For make project simply:
+`qmake && make`
+Usage: `./chess_server port`
 
