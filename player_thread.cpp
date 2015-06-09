@@ -15,6 +15,7 @@ PlayerThread::PlayerThread(qintptr ID, QObject *parent) :
 }
 
 void PlayerThread::run() {
+
     qDebug() << "Thread started";
     socket = new QTcpSocket();
     if(!socket->setSocketDescriptor(this->socketDescriptor)) {
@@ -35,6 +36,12 @@ void PlayerThread::run() {
 
     this->chessBoard->start();
     os << "Your figures are " << ((player == black) ? "blue" : "purple") <<"\n";
+    if (PlayerThread::numberConnections <2) {
+        os << "Opponent has not connected yet. Wait..\n";
+    }
+    else {
+        emit ((ChessServer*)this->parent())->ready();
+    }
     socket->write(os.str().c_str(), os.str().length());
     os.str("");
 
@@ -42,15 +49,21 @@ void PlayerThread::run() {
 }
 
 void PlayerThread::readyRead() {
-    QByteArray Data = socket->readAll();
-    string move(Data.constData(), Data.length());
-    qDebug() << socketDescriptor << "Data in: " << Data;
-    int s = this->chessBoard->move(move, this->player);
-    if (!s) // succesful move
-        emit ((ChessServer*)this->parent())->moved();
-    else { // error during moving
-        socket->write(os.str().c_str(), os.str().length());
-        os.str("");
+    if (PlayerThread::numberConnections<2) {
+        QByteArray err = "Opponent hasn't connected yet. Wait.";
+        socket->write(err);
+    }
+    else {
+        QByteArray Data = socket->readAll();
+        string move(Data.constData(), Data.length());
+        qDebug() << socketDescriptor << "Data in: " << Data;
+        int s = this->chessBoard->move(move, this->player);
+        if (!s) // succesful move
+            emit ((ChessServer*)this->parent())->moved();
+        else { // error during moving
+            socket->write(os.str().c_str(), os.str().length());
+            os.str("");
+        }
     }
 }
 
@@ -63,6 +76,12 @@ void PlayerThread::disconnected() {
 
 void PlayerThread::reRender() {
     chessBoard->render();
+    socket->write(os.str().c_str(), os.str().length());
+    os.str("");
+}
+
+void PlayerThread::readyConnection() {
+    os << "Ready! Start the game!\n";
     socket->write(os.str().c_str(), os.str().length());
     os.str("");
 }

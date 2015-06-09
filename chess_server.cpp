@@ -28,6 +28,7 @@ void ChessServer::incomingConnection(qintptr socketDescriptor) {
     PlayerThread *thread = new PlayerThread(socketDescriptor, this);
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
     connect(this, SIGNAL(moved()), thread, SLOT(reRender()));
+    connect(this, SIGNAL(ready()), thread, SLOT(readyConnection()));
 
     thread->start();
 }

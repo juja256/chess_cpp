@@ -14,6 +14,7 @@ public:
     stringstream& getStream();
 signals:
     void moved();
+    void ready();
 
 public slots:
 
@@ -21,7 +22,6 @@ protected:
     void incomingConnection(qintptr socketDescriptor);
     chess* chessBoard;
     stringstream os;
-    qint32 port;
 };
 
 #endif // CHESS_SERVER_H
