@@ -29,7 +29,7 @@ void ChessServer::incomingConnection(qintptr socketDescriptor) {
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
     connect(this, SIGNAL(moved()), thread, SLOT(reRender()));
     connect(this, SIGNAL(ready()), thread, SLOT(readyConnection()));
-
+    connect(this, SIGNAL(ended()), thread, SLOT(abortConnection()));
     thread->start();
 }
 

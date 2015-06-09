@@ -71,6 +71,9 @@ void PlayerThread::disconnected() {
     qDebug() << socketDescriptor << "Disconnected";
     socket->deleteLater();
     PlayerThread::numberConnections--;
+    if (numberConnections<2) {
+        emit ((ChessServer*)this->parent())->ended();
+    }
     exit(0);
 }
 
@@ -84,4 +87,12 @@ void PlayerThread::readyConnection() {
     os << "Ready! Start the game!\n";
     socket->write(os.str().c_str(), os.str().length());
     os.str("");
+}
+
+void PlayerThread::abortConnection() {
+    os << "Opponent has left the game. You won!!";
+    socket->write(os.str().c_str(), os.str().length());
+    os.str("");
+    socket->flush();
+    socket->abort();
 }

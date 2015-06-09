@@ -15,6 +15,7 @@ public:
 signals:
     void moved();
     void ready();
+    void ended();
 
 public slots:
 

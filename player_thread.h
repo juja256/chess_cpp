@@ -22,6 +22,7 @@ public slots:
     void disconnected();
     void reRender();
     void readyConnection();
+    void abortConnection();
 
 private:
     QTcpSocket *socket;
